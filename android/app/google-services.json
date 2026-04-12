@@ -12,7 +12,12 @@
           "package_name": "com.example.book_store"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "932942019017-lm3blolgbrkiq2nm3rmhc2bu3fur2r9t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBmK6ibUW1v3UNSmw6l-a02YNjWcwIlkYk"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932942019017-lm3blolgbrkiq2nm3rmhc2bu3fur2r9t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -31,7 +41,12 @@
           "package_name": "com.frientia.flutter_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "932942019017-lm3blolgbrkiq2nm3rmhc2bu3fur2r9t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBmK6ibUW1v3UNSmw6l-a02YNjWcwIlkYk"
@@ -39,7 +54,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932942019017-lm3blolgbrkiq2nm3rmhc2bu3fur2r9t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
