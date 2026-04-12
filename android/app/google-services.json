@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "932942019017",
+    "project_id": "app-flutter-uts",
+    "storage_bucket": "app-flutter-uts.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932942019017:android:e69c2ed70145de041d5018",
+        "android_client_info": {
+          "package_name": "com.example.book_store"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmK6ibUW1v3UNSmw6l-a02YNjWcwIlkYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932942019017:android:5d4c681b197cea261d5018",
+        "android_client_info": {
+          "package_name": "com.frientia.flutter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmK6ibUW1v3UNSmw6l-a02YNjWcwIlkYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
