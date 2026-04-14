@@ -3,6 +3,7 @@ import 'package:book_store/features/auth/presentation/pages/login_page.dart';
 import 'package:book_store/features/auth/presentation/pages/verify_email_page.dart';
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
 import 'package:book_store/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:book_store/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
