@@ -3,6 +3,7 @@ import 'package:book_store/features/auth/data/presentation/widgets/auth_header.d
 import 'package:book_store/features/auth/data/presentation/widgets/custom_button.dart';
 import 'package:book_store/features/auth/data/presentation/widgets/custom_text_field.dart';
 import 'package:book_store/features/auth/data/presentation/widgets/loading_overlay.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
