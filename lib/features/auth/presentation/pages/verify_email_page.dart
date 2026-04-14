@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:book_store/features/auth/presentation/pages/verify_email_page.dart';
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
 import 'package:book_store/features/auth/presentation/widgets/auth_header.dart';
 import 'package:book_store/features/auth/presentation/widgets/custom_button.dart';
+import 'package:book_store/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
