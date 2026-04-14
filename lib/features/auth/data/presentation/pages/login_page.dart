@@ -3,6 +3,7 @@ import 'package:book_store/features/auth/data/presentation/widgets/auth_header.d
 import 'package:book_store/features/auth/data/presentation/widgets/custom_button.dart';
 import 'package:book_store/features/auth/data/presentation/widgets/custom_text_field.dart';
 import 'package:book_store/features/auth/data/presentation/widgets/divider_with_text.dart';
+import 'package:book_store/features/auth/data/presentation/widgets/google_sign_in_button.dart';
 import 'package:book_store/features/auth/data/presentation/widgets/loading_overlay.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
