@@ -165,4 +165,15 @@ class AuthProvider extends ChangeNotifier {
     } 
     return false; 
   } 
+
+  // ─── Logout ─────────────────────────────────────────────── 
+  Future<void> logout() async { 
+    await _auth.signOut(); 
+    await _googleSignIn.signOut(); 
+    await SecureStorageService.clearAll(); 
+    _firebaseUser = null; 
+    _backendToken = null; 
+    _status = AuthStatus.unauthenticated; 
+    notifyListeners(); 
+  } 
 } 
