@@ -15,7 +15,7 @@ class ProductModel extends Equatable {
     required this.category,
   });
 
-  // Jembatan antara JSON backend dan Object Dart [cite: 1768]
+  // Jembatan antara JSON backend dan Object Dart
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
     id: json['id'] as int,
     name: json['name'] as String,

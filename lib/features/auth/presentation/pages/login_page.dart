@@ -1,10 +1,10 @@
-import 'package:book_store/features/auth/data/presentation/providers/auth_provider.dart';
-import 'package:book_store/features/auth/data/presentation/widgets/auth_header.dart';
-import 'package:book_store/features/auth/data/presentation/widgets/custom_button.dart';
-import 'package:book_store/features/auth/data/presentation/widgets/custom_text_field.dart';
-import 'package:book_store/features/auth/data/presentation/widgets/divider_with_text.dart';
-import 'package:book_store/features/auth/data/presentation/widgets/google_sign_in_button.dart';
-import 'package:book_store/features/auth/data/presentation/widgets/loading_overlay.dart';
+import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
+import 'package:book_store/features/auth/presentation/widgets/auth_header.dart';
+import 'package:book_store/features/auth/presentation/widgets/custom_button.dart';
+import 'package:book_store/features/auth/presentation/widgets/custom_text_field.dart';
+import 'package:book_store/features/auth/presentation/widgets/divider_with_text.dart';
+import 'package:book_store/features/auth/presentation/widgets/google_sign_in_button.dart';
+import 'package:book_store/features/auth/presentation/widgets/loading_overlay.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';

@@ -11,7 +11,7 @@ class ProductProvider extends ChangeNotifier {
   List<ProductModel> _products = [];
   String? _error;
 
-  // Getters agar bisa dibaca oleh UI [cite: 1107]
+  // Getters agar bisa dibaca oleh UI
   ProductStatus get status => _status;
   List<ProductModel> get products => _products;
   String? get error => _error;
@@ -19,13 +19,13 @@ class ProductProvider extends ChangeNotifier {
 
   Future<void> fetchProducts() async {
     _status = ProductStatus.loading;
-    notifyListeners(); // UI tampilkan spinner [cite: 1781]
+    notifyListeners(); // UI tampilkan spinner
 
     try {
-      // Hit API - Token otomatis masuk via Interceptor DioClient [cite: 1783, 1785]
+      // Hit API - Token otomatis masuk via Interceptor DioClient
       final response = await DioClient.instance.get(ApiConstants.products);
 
-      // Parse data dari { "data": [...] } [cite: 1792, 1999]
+      // Parse data dari { "data": [...] }
       final List<dynamic> data = response.data['data'];
       _products = data.map((e) => ProductModel.fromJson(e)).toList();
       
@@ -35,6 +35,6 @@ class ProductProvider extends ChangeNotifier {
       _status = ProductStatus.error;
     }
 
-    notifyListeners(); // Beritahu UI untuk rebuild [cite: 1799]
+    notifyListeners(); // Beritahu UI untuk rebuild
   }
 }
