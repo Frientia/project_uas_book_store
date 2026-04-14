@@ -5,7 +5,6 @@ import 'package:book_store/core/services/secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 
 enum AuthStatus {
   initial,          // Belum ada action
