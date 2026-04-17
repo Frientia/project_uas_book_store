@@ -26,7 +26,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final product = context.watch<ProductProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), // AppColors.background [cite: 580]
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -62,10 +62,9 @@ class _DashboardPageState extends State<DashboardPage> {
             onRefresh: () => product.fetchProducts(),
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
-              // Konfigurasi 2 kolom (kanan-kiri) [cite: 2078]
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.68, // Disesuaikan agar lebih panjang ke bawah
+                childAspectRatio: 0.68, 
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
