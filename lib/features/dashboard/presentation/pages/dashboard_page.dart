@@ -34,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Marketplace', 
+            const Text('Book Store', 
               style: TextStyle(fontSize: 14, color: Colors.grey)),
             Text(
               'Halo, ${auth.firebaseUser?.displayName ?? 'User'}!',
@@ -141,42 +141,27 @@ class _ProductCard extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8), // Perkecil padding jika perlu
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center, // Ubah agar lebih pas
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.category.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 10, 
-                          color: Color(0xFF1565C0), 
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        product.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          height: 1.2,
-                        ),
-                      ),
-                    ],
+                  // Gunakan Flexible untuk Nama agar tidak mendorong harga keluar
+                  Flexible(
+                    child: Text(
+                      product.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      maxLines: 2, // Batasi maksimal 2 baris 
+                      overflow: TextOverflow.ellipsis, // Tambahkan titik-titik (...) jika teks kepanjangan
+                    ),
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     'Rp ${product.price.toStringAsFixed(0)}',
                     style: const TextStyle(
-                      color: Color(0xFF1565C0),
-                      fontWeight: FontWeight.w800,
-                      fontSize: 15,
+                      color: Color(0xFF1565C0), 
+                      fontWeight: FontWeight.w800, 
+                      fontSize: 14,
                     ),
                   ),
                 ],
