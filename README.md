@@ -11,13 +11,15 @@ FAKULTAS TEKNOLOGI INFORMASI & KOMUNIKASI
 https://global.ac.id/
   </div>
 
-  ##  Project UAS
+  ##  Project UTS
+  - Nim : 1123150114
+  - Nama : Muhamad Yajid Rizky
   - Mata Kuliah : Aplikasi Mobile
   - Kelas : TI-SE 23 M 
 
 ## Demo Video
 
-Lihat video demo aplikasi kami untuk melihat semua fitur dalam aksi!
+Lihat video demo aplikasi untuk melihat semua fitur dalam aksi!
 
 **[Watch Full Demo on YouTube](https://youtu.be/)**
 
@@ -132,7 +134,7 @@ lib/
 ├── core/
 │   ├── constants/          # (Baru) Tempat simpan String, warna, atau ukuran statis
 │   ├── routes/             # (Pindahkan logika navigasi dari main.dart ke sini)
-│   ├── services/           # (Baru) Logic Firebase Auth atau Supabase
+│   ├── services/           # (Baru) Logic Firebase Auth
 │   └── theme/              # (Baru) Tema warna aplikasi
 │
 ├── features/
@@ -141,32 +143,14 @@ lib/
 │   │   ├── domain/
 │   │   └── presentation/
 │   │       ├── pages/      # login_page.dart, register_page.dart
-│   │       └── widgets/    
+│   │       └── widgets/    # auth_header.dart, custom_button.dart dll
 │   │
-│   ├── dashboard/          # Modul Utama (Home & Menu)
-│   │   ├── data/
-│   │   ├── domain/
-│   │   └── presentation/
-│   │       ├── pages/      # home_page.dart, menu_page.dart
-│   │       └── widgets/    # main_bottom_nav.dart
-│   │
-│   ├── checkout/           # Modul Transaksi & Pembayaran
-│   │   ├── data/
-│   │   ├── domain/
-│   │   └── presentation/
-│   │       ├── pages/      # payment_page.dart, detail_pesanan_page.dart, riwayat_pesanan.dart
-│   │       └── widgets/    # lottie_success.dart
-│   │
-│   ├── profile/            # Modul User & Developer
-│   │   ├── presentation/
-│   │       ├── pages/      # profile_page.dart, developer_page.dart, about_page.dart
-│   │       └── widgets/    # profil_agra.dart, profil_aji.dart, profil_yajid.dart
-│   │
-│   └── splash/             # Modul Onboarding/Splash
+│   ├── dashboard/          # Modul Utama (Dashboard)
+│       ├── data/
+│       ├── domain/
 │       └── presentation/
-│           ├── pages/      # splash_launch_screen.dart, splash_screen1-3.dart
-│           └── widgets/    # splash_lottie.dart
-│
+│           ├── pages/      # dashboard.dart
+│   
 ├── firebase_options.dart
 └── main.dart
 
@@ -213,6 +197,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <p>Made with by Mafia Sawit Team</p>
-  <p>© 2026 MyConcert App. All rights reserved.</p>
+  <p>© 2026 Book Store App. All rights reserved.</p>
 </div>
