@@ -1,16 +1,218 @@
-# book_store
+# Book Store App - Flutter Application
 
-A new Flutter project.
+<div align="center">
+<url>
+  <img width="300" height="301" alt="Institut Teknologi dan Bisnis Bina Sarana Global" src="https://github.com/user-attachments/assets/1e84f66a-135b-4cf2-b07a-b2a9098ce119" width="200"/>
+  </div>
+<div align="center">
+Institut Teknologi dan Bisnis Bina Sarana Global <br>
+FAKULTAS TEKNOLOGI INFORMASI & KOMUNIKASI 
+<br>
+https://global.ac.id/
+  </div>
+
+  ##  Project UAS
+  - Mata Kuliah : Aplikasi Mobile
+  - Kelas : TI-SE 23 M 
+
+## Demo Video
+
+Lihat video demo aplikasi kami untuk melihat semua fitur dalam aksi!
+
+**[Watch Full Demo on YouTube](https://youtu.be/)**
+
+Alternative link: **[Google Drive Demo]()**
+
+## Download APK
+
+Download versi terbaru aplikasi Book Store App:
+
+### Latest Release v1.0.0
+- [**Download APK (56.0 MB)**](https://github.com/Frientia/)
+
+
+**Minimum Requirements:**
+- Android 6.0 (API level 23) or higher
+- ~1gb free storage space untuk optimalisasi
+
+## Built With
+
+- **[Flutter](https://flutter.dev/)** - UI Framework
+- **[Dart](https://dart.dev/)** - Programming Language
+- **[Firebase](https://firebase.google.com/)** - Authentication
+- **[Golang](https://go.dev/)** - Backend Service
+- **[MySql](http://mysql.com/)** - Backend Database
+- **[Provider](https://pub.dev/packages/provider)** - State Management
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+Pastikan Anda sudah menginstall:
+- Flutter SDK (3.16.0 or higher)
+- Go (Golang): Versi stabil terbaru untuk kebutuhan backend.
+- MySQL: Sebagai sistem manajemen basis data relasional.
+- Dart SDK (3.2.0 or higher)
+- Android Studio / VS Code
+- Git
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation Flutter
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone repository
+```bash
+git clone https://github.com/Frientia/project_mobile_UTS.git
+cd project_mobile_UTS
+```
+
+2. Install dependencies
+```bash
+flutter pub get
+```
+
+3. Setup Firebase
+```bash
+# Download google-services.json dari Firebase Console
+# Place in android/app/
+cp path/to/google-services.json android/app/
+```
+
+5. Run aplikasi
+```bash
+flutter run
+```
+
+### Installation Golang (Backend)
+
+0. Link Backend Repo
+```bash
+https://github.com/Frientia/my-firebase-backend.git
+```
+1. Clone repository
+```bash
+git clone https://github.com/Frientia/my-firebase-backend.git
+cd my-firebase-backend
+```
+
+2. Install dependencies
+```bash
+go mod tidy
+```
+
+3. Setup Firebase
+```bash
+# Download adminSDk dari Firebase
+# Place in root project
+cp path/to/firebase-service-account.json
+```
+4. Setup local server
+```bash
+# Copy .env.example secara manual, atau
+cp .env.example .env
+# pada terminal
+```
+
+### Build APK 
+
+```bash
+# Debug APK
+flutter build apk --debug
+
+# Release APK
+flutter build apk --release
+
+# Split APK by ABI
+flutter build apk --split-per-abi
+```
+
+## 📁 Project Structure
+
+```
+lib/
+├── core/
+│   ├── constants/          # (Baru) Tempat simpan String, warna, atau ukuran statis
+│   ├── routes/             # (Pindahkan logika navigasi dari main.dart ke sini)
+│   ├── services/           # (Baru) Logic Firebase Auth atau Supabase
+│   └── theme/              # (Baru) Tema warna aplikasi
+│
+├── features/
+│   ├── auth/               # Modul Login & Register
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   │       ├── pages/      # login_page.dart, register_page.dart
+│   │       └── widgets/    
+│   │
+│   ├── dashboard/          # Modul Utama (Home & Menu)
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   │       ├── pages/      # home_page.dart, menu_page.dart
+│   │       └── widgets/    # main_bottom_nav.dart
+│   │
+│   ├── checkout/           # Modul Transaksi & Pembayaran
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   │       ├── pages/      # payment_page.dart, detail_pesanan_page.dart, riwayat_pesanan.dart
+│   │       └── widgets/    # lottie_success.dart
+│   │
+│   ├── profile/            # Modul User & Developer
+│   │   ├── presentation/
+│   │       ├── pages/      # profile_page.dart, developer_page.dart, about_page.dart
+│   │       └── widgets/    # profil_agra.dart, profil_aji.dart, profil_yajid.dart
+│   │
+│   └── splash/             # Modul Onboarding/Splash
+│       └── presentation/
+│           ├── pages/      # splash_launch_screen.dart, splash_screen1-3.dart
+│           └── widgets/    # splash_lottie.dart
+│
+├── firebase_options.dart
+└── main.dart
+
+```
+
+## Authentication Flow
+
+```
+1. Splash Loading (Auto-login check)
+   ↓
+2. Login Screen / Register Screen
+   ↓
+3. Home Screen (Dashboard)
+```
+
+
+```
+<img width="628" height="260" alt="mobileuas drawio (1)" src="https://github.com/user-attachments/assets/1f4f4823-6925-41e4-84c1-4cfd3cb57200" />
+
+
+## 📝 API Documentation
+
+### Authentication Endpoints
+- `POST /api/auth/register` - Register user baru
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+
+## Acknowledgments
+
+- [Flutter Community](https://flutter.dev/community) - For amazing packages
+- [Firebase](https://firebase.google.com/) - For backend services
+- [Flaticon](https://www.flaticon.com/) - For app icons
+- [Unsplash](https://unsplash.com/) - For placeholder images
+
+
+
+---
+
+<div align="center">
+  <p>Made with by Mafia Sawit Team</p>
+  <p>© 2026 MyConcert App. All rights reserved.</p>
+</div>
