@@ -14,7 +14,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    // Memanggil fetch produk setelah frame pertama selesai [cite: 2020]
+    // Memanggil fetch produk setelah frame pertama selesai
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().fetchProducts();
     });
