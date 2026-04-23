@@ -21,21 +21,9 @@ https://global.ac.id/
 
 Lihat video demo aplikasi untuk melihat semua fitur dalam aksi!
 
-**[Watch Full Demo on YouTube](https://youtu.be/)**
+**[Watch Full Demo on YouTube](https://youtu.be/wDitUemQItw)**
 
 Alternative link: **[Google Drive Demo]()**
-
-## Download APK
-
-Download versi terbaru aplikasi Book Store App:
-
-### Latest Release v1.0.0
-- [**Download APK (56.0 MB)**](https://github.com/Frientia/)
-
-
-**Minimum Requirements:**
-- Android 6.0 (API level 23) or higher
-- ~1gb free storage space untuk optimalisasi
 
 ## Built With
 
@@ -167,17 +155,12 @@ lib/
 ```
 
 
-```
-<img width="628" height="260" alt="mobileuas drawio (1)" src="https://github.com/user-attachments/assets/1f4f4823-6925-41e4-84c1-4cfd3cb57200" />
-
-
 ## 📝 API Documentation
 
-### Authentication Endpoints
+## Authentication Endpoints
 - `POST /api/auth/register` - Register user baru
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
----
 
 ## 📄 License
 
@@ -195,7 +178,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 
 ---
-
 <div align="center">
   <p>© 2026 Book Store App. All rights reserved.</p>
 </div>
