@@ -5,14 +5,12 @@ class LoadingOverlay extends StatelessWidget {
   final bool isLoading;
   final String? message;
 
-
   const LoadingOverlay({
     super.key,
     required this.child,
     required this.isLoading,
     this.message,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +19,12 @@ class LoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           Container(
-            color: Colors.black.withAlpha(102),
+            color: Colors.black.withOpacity(0.4), // Overlay tetap hitam transparan
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -35,7 +33,7 @@ class LoadingOverlay extends StatelessWidget {
                     const CircularProgressIndicator(),
                     if (message != null) ...[
                       const SizedBox(height: 16),
-                      Text(message!, style: const TextStyle(fontSize: 14)),
+                      Text(message!, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ],
                 ),

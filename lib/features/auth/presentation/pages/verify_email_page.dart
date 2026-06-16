@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
 import 'package:book_store/features/auth/presentation/widgets/auth_header.dart';
 import 'package:book_store/features/auth/presentation/widgets/custom_button.dart';
@@ -31,7 +30,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     super.dispose();
   }
 
-  // Polling: cek setiap 5 detik apakah email sudah diverifikasi
   void _startPolling() {
     _timer = Timer.periodic(const Duration(seconds: 5), (_) async {
       if (!mounted) return;
@@ -48,7 +46,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if (_resendCooldown) return;
     await context.read<AuthProvider>().resendVerificationEmail();
 
-    // Cooldown 60 detik sebelum bisa kirim lagi
     setState(() {
       _resendCooldown = true;
       _countdown = 60;
@@ -64,13 +61,17 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Email verifikasi sudah dikirim ulang')),
+      SnackBar(
+        content: Text('Email verifikasi sudah dikirim ulang', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().firebaseUser;
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -79,7 +80,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Widget reusable: AuthHeader
               const AuthHeader(
                 icon: Icons.mark_email_unread_outlined,
                 title: 'Verifikasi Email Kamu',
@@ -87,23 +87,19 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                 iconColor: Colors.orange,
               ),
               const SizedBox(height: 24),
-
-              // Tampilkan email user
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: theme.dividerColor),
                 ),
                 child: Text(
                   user?.email ?? '-',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                 ),
               ),
               const SizedBox(height: 32),
-
-              // Indikator polling
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -115,13 +111,11 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   const SizedBox(width: 12),
                   Text(
                     'Menunggu konfirmasi...',
-                    style: TextStyle(color: Colors.grey.shade600),
+                    style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6)),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
-
-              // Tombol kirim ulang dengan cooldown
               CustomButton(
                 label: _resendCooldown
                     ? 'Kirim Ulang ($_countdown detik)'
@@ -130,8 +124,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                 onPressed: _resendCooldown ? null : _resendEmail,
               ),
               const SizedBox(height: 16),
-
-              // Tombol logout
               CustomButton(
                 label: 'Ganti Akun / Logout',
                 variant: ButtonVariant.text,

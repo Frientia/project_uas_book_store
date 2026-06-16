@@ -8,14 +8,16 @@ class GoogleSignInButton extends StatelessWidget {
  
   @override 
   Widget build(BuildContext context) { 
+    final theme = Theme.of(context);
+    
     return SizedBox( 
       width: double.infinity, 
       height: 52, 
       child: OutlinedButton( 
         onPressed: isLoading ? null : onPressed, 
         style: OutlinedButton.styleFrom( 
-          backgroundColor: Colors.white, 
-          side: BorderSide(color: Colors.grey.shade300), 
+          backgroundColor: theme.colorScheme.surface, 
+          side: BorderSide(color: theme.dividerColor), 
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), 
         ), 
         child: isLoading 
@@ -28,12 +30,12 @@ class GoogleSignInButton extends StatelessWidget {
                 children: [
                   Image.asset('assets/icons/google_logo.png', width: 24, height: 24), 
                   const SizedBox(width: 12), 
-                  const Text( 
+                  Text( 
                     'Lanjutkan dengan Google', 
                     style: TextStyle( 
                       fontSize: 16, 
                       fontWeight: FontWeight.w500,
-                       color: Colors.black87, 
+                      color: theme.colorScheme.onSurface, 
                     ), 
                   ), 
                 ], 
