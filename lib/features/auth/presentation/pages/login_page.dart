@@ -14,18 +14,15 @@ import 'package:provider/provider.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _showPass = false;
-
 
   @override
   void dispose() {
@@ -34,11 +31,8 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-
-  /// Handler untuk login email/password
   Future<void> _loginEmail() async {
     if (!_formKey.currentState!.validate()) return;
-
 
     final auth = context.read<AuthProvider>();
     final ok = await auth.loginWithEmail(
@@ -46,13 +40,10 @@ class _LoginPageState extends State<LoginPage> {
       password: _passCtrl.text,
     );
 
-
     if (!mounted) return;
     _handleLoginResult(ok, auth);
   }
 
-
-  /// Handler untuk login Google
   Future<void> _loginGoogle() async {
     final auth = context.read<AuthProvider>();
     final ok = await auth.loginWithGoogle();
@@ -60,8 +51,6 @@ class _LoginPageState extends State<LoginPage> {
     _handleLoginResult(ok, auth);
   }
 
-
-  /// Routing berdasarkan hasil login
   void _handleLoginResult(bool ok, AuthProvider auth) {
     if (ok) {
       Navigator.pushReplacementNamed(context, AppRouter.dashboard);
@@ -70,13 +59,15 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(auth.errorMessage ?? 'Login gagal'),
-          backgroundColor: Colors.red,
+          content: Text(
+            auth.errorMessage ?? 'Login gagal',
+            style: TextStyle(color: Theme.of(context).colorScheme.onError),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     }
   }
-
 
   void _showForgotPasswordDialog(BuildContext context) {
     final ctrl = TextEditingController();
@@ -109,11 +100,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final isLoading = context.watch<AuthProvider>().isLoading;
-
+    final theme = Theme.of(context);
 
     return LoadingOverlay(
       isLoading: isLoading,
@@ -189,16 +179,19 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Belum punya akun? '),
+                      Text(
+                        'Belum punya akun? ',
+                        style: TextStyle(color: theme.colorScheme.onSurface),
+                      ),
                       GestureDetector(
                         onTap: () => Navigator.pushReplacementNamed(
                           context,
                           AppRouter.register,
                         ),
-                        child: const Text(
+                        child: Text(
                           'Daftar',
                           style: TextStyle(
-                            color: Color(0xFF1565C0),
+                            color: theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -214,5 +207,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
