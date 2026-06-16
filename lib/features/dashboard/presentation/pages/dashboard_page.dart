@@ -3,6 +3,7 @@ import 'package:book_store/features/auth/presentation/providers/auth_provider.da
 import 'package:book_store/features/dashboard/presentation/providers/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:book_store/core/providers/theme_provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -14,7 +15,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    // Memanggil fetch produk setelah frame pertama selesai
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().fetchProducts();
     });
@@ -25,17 +25,17 @@ class _DashboardPageState extends State<DashboardPage> {
     final auth = context.watch<AuthProvider>();
     final product = context.watch<ProductProvider>();
 
+    final themeProvider = context.watch<ThemeProvider>();
+    final isDark = themeProvider.isDark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Book Store', 
-              style: TextStyle(fontSize: 14, color: Colors.grey)),
+            Text('Book Store', 
+              style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
             Text(
               'Halo, ${auth.firebaseUser?.displayName ?? 'User'}!',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -43,6 +43,19 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
         actions: [
+          Row(
+            children: [
+              Icon(
+                isDark ? Icons.dark_mode : Icons.light_mode,
+                size: 20,
+                color: isDark ? Colors.amber : Colors.grey.shade600,
+              ),
+              Switch(
+                value: isDark,
+                onChanged: (_) => context.read<ThemeProvider>().toggle(),
+              ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
             onPressed: () async {
@@ -81,10 +94,10 @@ class _DashboardPageState extends State<DashboardPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.cloud_off_rounded, size: 80, color: Colors.grey[400]),
+          Icon(Icons.cloud_off_rounded, size: 80, color: Theme.of(context).disabledColor),
           const SizedBox(height: 16),
           Text(product.error ?? 'Gagal memuat data', 
-            style: const TextStyle(color: Colors.grey)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
           const SizedBox(height: 24),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -106,13 +119,16 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surface = Theme.of(context).colorScheme.surface;
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(26),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -121,7 +137,6 @@ class _ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bagian Gambar
           Expanded(
             flex: 3,
             child: ClipRRect(
@@ -131,36 +146,34 @@ class _ProductCard extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
-                  color: Colors.grey[100],
-                  child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
+                  color: Theme.of(context).highlightColor,
+                  child: Icon(Icons.broken_image_outlined, color: Theme.of(context).disabledColor),
                 ),
               ),
             ),
           ),
-          // Bagian Detail
           Expanded(
             flex: 2,
             child: Padding(
-              padding: const EdgeInsets.all(8), // Perkecil padding jika perlu
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center, // Ubah agar lebih pas
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Gunakan Flexible untuk Nama agar tidak mendorong harga keluar
                   Flexible(
                     child: Text(
                       product.name,
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                      maxLines: 2, // Batasi maksimal 2 baris 
-                      overflow: TextOverflow.ellipsis, // Tambahkan titik-titik (...) jika teks kepanjangan
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Rp ${product.price.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      color: Color(0xFF1565C0), 
-                      fontWeight: FontWeight.w800, 
+                    style: TextStyle(
+                      color: primary,
+                      fontWeight: FontWeight.w800,
                       fontSize: 14,
                     ),
                   ),
