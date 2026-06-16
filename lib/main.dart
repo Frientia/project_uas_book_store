@@ -3,6 +3,7 @@ import 'package:book_store/core/services/secure_storage.dart';
 import 'package:book_store/core/theme/app_theme.dart';
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
 import 'package:book_store/features/dashboard/presentation/providers/product_provider.dart';
+import 'package:book_store/core/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -11,7 +12,6 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -19,6 +19,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
       ],
@@ -32,23 +33,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ProductProvider()),
-      ],
-      child: MaterialApp(
-        title: 'My App',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        initialRoute: AppRouter.splash,
-        routes: AppRouter.routes,
-      ),
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return MaterialApp(
+      title: 'My App',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeProvider.themeMode,
+      initialRoute: AppRouter.splash,
+      routes: AppRouter.routes,
     );
   }
 }
 
-// SplashPage: cek token tersimpan, redirect otomatis
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -64,7 +62,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(seconds: 2)); // Animasi splash
+    await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
     final token = await SecureStorageService.getToken();
