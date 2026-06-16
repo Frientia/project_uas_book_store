@@ -1,4 +1,4 @@
-import 'package:book_store/features/auth/data/model/cart_model.dart';
+import 'package:book_store/features/order/data/model/cart_model.dart';
 
 abstract class CartRepository {
   Future<CartModel> getCart();
