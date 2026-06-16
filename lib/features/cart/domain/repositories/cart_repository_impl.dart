@@ -1,7 +1,7 @@
 import 'package:book_store/core/constants/api_constants.dart';
 import 'package:book_store/core/services/dio_client.dart';
-import 'package:book_store/features/order/data/model/cart_model.dart';
-import 'package:book_store/features/order/domain/repositories/cart_repository.dart';
+import 'package:book_store/features/cart/data/model/cart_model.dart';
+import 'package:book_store/features/cart/domain/repositories/cart_repository.dart';
 
 class CartRepositoryImpl implements CartRepository {
   @override
