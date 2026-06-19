@@ -1,5 +1,5 @@
 import 'package:book_store/core/routes/app_router.dart';
-import 'package:book_store/features/cart/domain/providers/cart_provider.dart';
+import 'package:book_store/features/cart/presentation/providers/cart_provider.dart';
 import 'package:book_store/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
