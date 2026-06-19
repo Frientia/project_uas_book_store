@@ -58,8 +58,60 @@ class AuthGuard extends StatelessWidget {
 
     return switch (status) {
       AuthStatus.authenticated => child,
-      AuthStatus.emailNotVerified => const Scaffold(body: Center(child: Text("Verifikasi Email Dulu"))), 
-      _ => const Scaffold(body: Center(child: Text("Silakan Login")))
+      AuthStatus.emailNotVerified => const Scaffold(
+          body: Center(
+            child: Text("Verifikasi Email Dulu"),
+          ),
+        ), 
+      _ => Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.lock_outline_rounded, 
+                  size: 80, 
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  "Akses Terbatas",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Silakan login terlebih dahulu untuk\nmengakses halaman ini.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14, 
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  icon: const Icon(Icons.login_rounded),
+                  label: const Text(
+                    "Ke Halaman Login",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context, 
+                      AppRouter.login, 
+                      (route) => false,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        )
     };
   }
 }
