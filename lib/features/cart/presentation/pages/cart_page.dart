@@ -1,20 +1,15 @@
-import 'package:book_store/features/cart/domain/providers/cart_provider.dart';
-import 'package:book_store/features/cart/order/data/model/cart_model.dart';
+import 'package:book_store/features/cart/data/model/cart_model.dart';
 import 'package:flutter/material.dart';
-import 'package:pasar_malam/core/routes/app_router.dart';
-import 'package:pasar_malam/features/cart/data/models/cart_model.dart';
-import 'package:pasar_malam/features/cart/presentation/providers/cart_provider.dart';
+import 'package:book_store/features/cart/presentation/providers/cart_provider.dart';
+import 'package:book_store/features/order/presentation/pages/checkout_page.dart';
 import 'package:provider/provider.dart';
-
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
-
   @override
   State<CartPage> createState() => _CartPageState();
 }
-
 
 class _CartPageState extends State<CartPage> {
   @override
@@ -24,7 +19,6 @@ class _CartPageState extends State<CartPage> {
       context.read<CartProvider>().fetchCart();
     });
   }
-
 
   String _formatPrice(double price) {
     final str = price.toInt().toString();
@@ -38,15 +32,22 @@ class _CartPageState extends State<CartPage> {
     return 'Rp. ${buffer.toString().split('').reversed.join()}';
   }
 
-
-  Future<void> _confirmClearCart(BuildContext context, CartProvider cartProv) async {
+  Future<void> _confirmClearCart(
+    BuildContext context,
+    CartProvider cartProv,
+  ) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Kosongkan Keranjang'),
-        content: const Text('Apakah kamu yakin ingin menghapus semua item dari keranjang?'),
+        content: const Text(
+          'Apakah kamu yakin ingin menghapus semua item dari keranjang?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(ctx, true),
@@ -60,7 +61,6 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +69,8 @@ class _CartPageState extends State<CartPage> {
         actions: [
           Consumer<CartProvider>(
             builder: (context, cartProv, _) {
-              final hasItems = cartProv.cart != null && cartProv.cart!.items.isNotEmpty;
+              final hasItems =
+                  cartProv.cart != null && cartProv.cart!.items.isNotEmpty;
               if (!hasItems) return const SizedBox.shrink();
               return IconButton(
                 icon: const Icon(Icons.delete_outline),
@@ -82,10 +83,10 @@ class _CartPageState extends State<CartPage> {
       ),
       body: Consumer<CartProvider>(
         builder: (context, cartProv, _) {
-          if (cartProv.status == CartStatus.loading || cartProv.status == CartStatus.initial) {
+          if (cartProv.status == CartStatus.loading ||
+              cartProv.status == CartStatus.initial) {
             return const Center(child: CircularProgressIndicator());
           }
-
 
           if (cartProv.status == CartStatus.error) {
             return Center(
@@ -106,12 +107,10 @@ class _CartPageState extends State<CartPage> {
             );
           }
 
-
           final cart = cartProv.cart;
           if (cart == null || cart.items.isEmpty) {
             return _EmptyCartView();
           }
-
 
           return Column(
             children: [
@@ -121,7 +120,8 @@ class _CartPageState extends State<CartPage> {
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: cart.items.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                     itemBuilder: (ctx, i) => _CartItemCard(
                       item: cart.items[i],
                       formatPrice: _formatPrice,
@@ -134,8 +134,10 @@ class _CartPageState extends State<CartPage> {
                           cartProv.updateItem(cart.items[i].id, qty);
                         }
                       },
-                      onIncrease: () =>
-                          cartProv.updateItem(cart.items[i].id, cart.items[i].quantity + 1),
+                      onIncrease: () => cartProv.updateItem(
+                        cart.items[i].id,
+                        cart.items[i].quantity + 1,
+                      ),
                     ),
                   ),
                 ),
@@ -144,7 +146,10 @@ class _CartPageState extends State<CartPage> {
                 total: cart.total,
                 formatPrice: _formatPrice,
                 onCheckout: () {
-                  Navigator.pushNamed(context, AppRouter.checkout);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CheckoutPage()),
+                  );
                 },
               ),
             ],
@@ -154,7 +159,6 @@ class _CartPageState extends State<CartPage> {
     );
   }
 }
-
 
 // ── Empty Cart View ────────────────────────────────────────
 class _EmptyCartView extends StatelessWidget {
@@ -167,20 +171,26 @@ class _EmptyCartView extends StatelessWidget {
           Icon(
             Icons.shopping_cart_outlined,
             size: 80,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
             'Keranjang masih kosong',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Yuk tambahkan produk ke keranjang!',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.4),
             ),
           ),
           const SizedBox(height: 24),
@@ -195,7 +205,6 @@ class _EmptyCartView extends StatelessWidget {
   }
 }
 
-
 // ── Cart Item Card ─────────────────────────────────────────
 class _CartItemCard extends StatelessWidget {
   final CartItemModel item;
@@ -203,7 +212,6 @@ class _CartItemCard extends StatelessWidget {
   final VoidCallback onRemove;
   final VoidCallback onDecrease;
   final VoidCallback onIncrease;
-
 
   const _CartItemCard({
     required this.item,
@@ -213,13 +221,11 @@ class _CartItemCard extends StatelessWidget {
     required this.onIncrease,
   });
 
-
   @override
   Widget build(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final primary = Theme.of(context).colorScheme.primary;
-
 
     return Container(
       decoration: BoxDecoration(
@@ -300,7 +306,10 @@ class _CartItemCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     formatPrice(item.product.price),
-                    style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.6)),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: onSurface.withValues(alpha: 0.6),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -309,7 +318,11 @@ class _CartItemCard extends StatelessWidget {
                       // Quantity control
                       Row(
                         children: [
-                          _QtyButton(icon: Icons.remove, onTap: onDecrease, primary: primary),
+                          _QtyButton(
+                            icon: Icons.remove,
+                            onTap: onDecrease,
+                            primary: primary,
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Text(
@@ -321,13 +334,21 @@ class _CartItemCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          _QtyButton(icon: Icons.add, onTap: onIncrease, primary: primary),
+                          _QtyButton(
+                            icon: Icons.add,
+                            onTap: onIncrease,
+                            primary: primary,
+                          ),
                         ],
                       ),
                       // Subtotal
                       Text(
                         formatPrice(item.subtotal),
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: primary),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: primary,
+                        ),
                       ),
                     ],
                   ),
@@ -339,7 +360,6 @@ class _CartItemCard extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _placeholder(BuildContext context) => Container(
     width: 80,
@@ -353,15 +373,16 @@ class _CartItemCard extends StatelessWidget {
   );
 }
 
-
 class _QtyButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final Color primary;
 
-
-  const _QtyButton({required this.icon, required this.onTap, required this.primary});
-
+  const _QtyButton({
+    required this.icon,
+    required this.onTap,
+    required this.primary,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -380,23 +401,23 @@ class _QtyButton extends StatelessWidget {
   }
 }
 
-
 // ── Cart Bottom Bar ────────────────────────────────────────
 class _CartBottomBar extends StatelessWidget {
   final double total;
   final String Function(double) formatPrice;
   final VoidCallback onCheckout;
 
-
-  const _CartBottomBar({required this.total, required this.formatPrice, required this.onCheckout});
-
+  const _CartBottomBar({
+    required this.total,
+    required this.formatPrice,
+    required this.onCheckout,
+  });
 
   @override
   Widget build(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final primary = Theme.of(context).colorScheme.primary;
-
 
     return Container(
       decoration: BoxDecoration(
@@ -421,11 +442,18 @@ class _CartBottomBar extends StatelessWidget {
                 children: [
                   Text(
                     'Total',
-                    style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.5)),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: onSurface.withValues(alpha: 0.5),
+                    ),
                   ),
                   Text(
                     formatPrice(total),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: primary),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: primary,
+                    ),
                   ),
                 ],
               ),
@@ -436,7 +464,9 @@ class _CartBottomBar extends StatelessWidget {
                     backgroundColor: primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   onPressed: onCheckout,
                   child: const Text(
