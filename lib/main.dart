@@ -2,8 +2,10 @@ import 'package:book_store/core/routes/app_router.dart';
 import 'package:book_store/core/services/secure_storage.dart';
 import 'package:book_store/core/theme/app_theme.dart';
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
+import 'package:book_store/features/cart/presentation/providers/cart_provider.dart';
 import 'package:book_store/features/dashboard/presentation/providers/product_provider.dart';
 import 'package:book_store/core/providers/theme_provider.dart';
+import 'package:book_store/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -22,6 +24,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()), 
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: const MyApp(),
     ),
