@@ -6,11 +6,9 @@ import 'package:provider/provider.dart';
 class MyOrdersPage extends StatefulWidget {
   const MyOrdersPage({super.key});
 
-
   @override
   State<MyOrdersPage> createState() => _MyOrdersPageState();
 }
-
 
 class _MyOrdersPageState extends State<MyOrdersPage> {
   @override
@@ -20,7 +18,6 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
       context.read<OrderProvider>().fetchMyOrders();
     });
   }
-
 
   String _formatPrice(double price) {
     final str = price.toInt().toString();
@@ -33,7 +30,6 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     }
     return 'Rp. ${buffer.toString().split('').reversed.join()}';
   }
-
 
   String _formatDate(String createdAt) {
     if (createdAt.isEmpty) return '-';
@@ -49,7 +45,6 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +54,6 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
           if (orderProv.checkoutStatus == OrderStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           }
-
 
           if (orderProv.checkoutStatus == OrderStatus.error) {
             return Center(
@@ -73,13 +67,19 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                   ElevatedButton.icon(
                     icon: const Icon(Icons.refresh),
                     label: const Text('Coba Lagi'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     onPressed: () => orderProv.fetchMyOrders(),
                   ),
                 ],
               ),
             );
           }
-
 
           if (orderProv.orders.isEmpty) {
             return Center(
@@ -109,13 +109,12 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
             );
           }
 
-
           return RefreshIndicator(
             onRefresh: () => orderProv.fetchMyOrders(),
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: orderProv.orders.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (ctx, i) => _OrderCard(
                 order: orderProv.orders[i],
                 formatPrice: _formatPrice,
@@ -129,20 +128,16 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
   }
 }
 
-
-// ── Order Card ─────────────────────────────────────────────
 class _OrderCard extends StatelessWidget {
   final OrderModel order;
   final String Function(double) formatPrice;
   final String Function(String) formatDate;
-
 
   const _OrderCard({
     required this.order,
     required this.formatPrice,
     required this.formatDate,
   });
-
 
   Color _statusColor(String status) {
     switch (status) {
@@ -161,7 +156,6 @@ class _OrderCard extends StatelessWidget {
     }
   }
 
-
   String _statusLabel(String status) {
     switch (status) {
       case 'pending':
@@ -179,7 +173,6 @@ class _OrderCard extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
@@ -187,40 +180,38 @@ class _OrderCard extends StatelessWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final statusColor = _statusColor(order.status);
 
-
     return Container(
       decoration: BoxDecoration(
         color: surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header: order id + status chip
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Order #${order.id}',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: primary,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                    horizontal: 12,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
                     color: statusColor.withValues(alpha: 0.1),
@@ -229,7 +220,7 @@ class _OrderCard extends StatelessWidget {
                   child: Text(
                     _statusLabel(order.status),
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: statusColor,
                     ),
@@ -237,31 +228,43 @@ class _OrderCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 6),
-            // Tanggal
+            const SizedBox(height: 8),
             Text(
               formatDate(order.createdAt),
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
                 color: onSurface.withValues(alpha: 0.5),
               ),
             ),
-            const Divider(height: 20),
-            // Jumlah item + total
+            const Divider(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${order.items.length} item',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: onSurface.withValues(alpha: 0.7),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Pesanan',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${order.items.length} Barang',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: onSurface,
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
                   formatPrice(order.totalAmount),
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: onSurface,
                   ),
