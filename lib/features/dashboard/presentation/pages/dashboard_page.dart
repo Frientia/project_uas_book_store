@@ -7,9 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:book_store/core/providers/theme_provider.dart';
 
-// Jika kamu ingin memasukkan halaman keranjang langsung di tab, pastikan ini di-import:
-// import 'package:book_store/features/cart/presentation/pages/cart_page.dart';
-
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
   
@@ -18,15 +15,13 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  // --- STATE UNTUK BOTTOM NAV ---
   int _bottomNavIndex = 0;
 
-  // --- STATE UNTUK FILTER & SEARCH ---
   int _selectedCategoryIndex = 0;
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
   
-  final List<String> _categories = ['Semua', 'Fiksi', 'Edukasi', 'Komik', 'Biografi', 'Teknologi'];
+  final List<String> _categories = ['Semua', 'Fiksi', 'Edukasi', 'Novel', 'History', 'Programming'];
 
   @override
   void initState() {
@@ -96,7 +91,6 @@ class _DashboardPageState extends State<DashboardPage> {
     return SafeArea(
       child: Column(
         children: [
-          // Header (Sapaan & Tombol Tema)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 16, 10),
             child: Row(
@@ -133,7 +127,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: TextField(
               controller: _searchController,
               onChanged: (value) {
-                setState(() => _searchQuery = value); // Memicu filter saat mengetik
+                setState(() => _searchQuery = value);
               },
               decoration: InputDecoration(
                 hintText: 'Cari buku...',
@@ -315,7 +309,6 @@ class _ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => _showProductDetail(context),
       child: Container(
-        // Desain Flat: Tanpa shadow, hanya border tipis
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: onSurface.withValues(alpha: 0.1)),
@@ -338,7 +331,6 @@ class _ProductCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Info Teks (Padding kecil agar compact)
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
