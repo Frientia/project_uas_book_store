@@ -9,37 +9,28 @@ import 'package:url_launcher/url_launcher.dart';
 class PaymentPendingPage extends StatefulWidget {
   final OrderModel order;
 
-
   const PaymentPendingPage({super.key, required this.order});
-
 
   @override
   State<PaymentPendingPage> createState() => _PaymentPendingPageState();
 }
 
-
 class _PaymentPendingPageState extends State<PaymentPendingPage>
     with WidgetsBindingObserver {
   bool _gopayLaunched = false;
-
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-
-    // Untuk GoPay: otomatis buka deeplink saat halaman pertama dimuat
     if (widget.order.paymentMethod == 'gopay') {
       WidgetsBinding.instance.addPostFrameCallback((_) => _launchGopay());
     }
 
-
-    // Mulai polling otomatis untuk kedua metode
     final orderProv = context.read<OrderProvider>();
     orderProv.startPaymentPolling(widget.order.id);
   }
-
 
   @override
   void dispose() {
@@ -48,21 +39,16 @@ class _PaymentPendingPageState extends State<PaymentPendingPage>
     super.dispose();
   }
 
-
-  /// Dipanggil setiap kali app kembali ke foreground (setelah dari GoPay)
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _gopayLaunched) {
-      // Cek status sekali saat balik dari GoPay
       context.read<OrderProvider>().checkPaymentStatus(widget.order.id);
     }
   }
 
-
   Future<void> _launchGopay() async {
     final deeplink = widget.order.gopayDeeplink;
     if (deeplink == null || deeplink.isEmpty) return;
-
 
     final uri = Uri.parse(deeplink);
     if (await canLaunchUrl(uri)) {
@@ -79,7 +65,6 @@ class _PaymentPendingPageState extends State<PaymentPendingPage>
     }
   }
 
-
   String _formatPrice(double price) {
     final str = price.toInt().toString();
     final buffer = StringBuffer();
@@ -92,7 +77,6 @@ class _PaymentPendingPageState extends State<PaymentPendingPage>
     return 'Rp. ${buffer.toString().split('').reversed.join()}';
   }
 
-
   void _onPaymentSuccess() {
     context.read<OrderProvider>().stopPaymentPolling();
     Navigator.pushNamedAndRemoveUntil(
@@ -103,22 +87,17 @@ class _PaymentPendingPageState extends State<PaymentPendingPage>
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final orderProv = context.watch<OrderProvider>();
     final payStatus = orderProv.paymentCheckStatus;
     final order = orderProv.lastOrder ?? widget.order;
 
-
-    // Jika sudah terbayar, navigasi ke halaman sukses
     if (payStatus == PaymentCheckStatus.paid) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _onPaymentSuccess());
     }
 
-
     return PopScope(
-      // Cegah tombol back saat pembayaran masih pending agar tidak bisa skip
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _showCancelConfirmation();
@@ -151,7 +130,6 @@ class _PaymentPendingPageState extends State<PaymentPendingPage>
       ),
     );
   }
-
 
   void _showCancelConfirmation() {
     showDialog(
@@ -188,18 +166,11 @@ class _PaymentPendingPageState extends State<PaymentPendingPage>
   }
 }
 
-
-// ──────────────────────────────────────────────────────────────
-// Virtual Account Body
-// ──────────────────────────────────────────────────────────────
-
-
 class _VirtualAccountBody extends StatelessWidget {
   final OrderModel order;
   final PaymentCheckStatus payStatus;
   final String Function(double) formatPrice;
   final VoidCallback onCheckStatus;
-
 
   const _VirtualAccountBody({
     required this.order,
@@ -208,14 +179,12 @@ class _VirtualAccountBody extends StatelessWidget {
     required this.onCheckStatus,
   });
 
-
   static const List<_BankInfo> _banks = [
     _BankInfo('BCA', '888', Color(0xFF003087)),
     _BankInfo('Mandiri', '888', Color(0xFF003087)),
     _BankInfo('BNI', '8808', Color(0xFF004B87)),
     _BankInfo('BRI', '889', Color(0xFF00529B)),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -224,13 +193,11 @@ class _VirtualAccountBody extends StatelessWidget {
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final vaNumber = order.vaNumber ?? '-';
 
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header icon ─────────────────────────────────────
           Center(
             child: Container(
               width: 80,
@@ -268,105 +235,91 @@ class _VirtualAccountBody extends StatelessWidget {
               ),
             ),
           ),
-
-
-          const SizedBox(height: 24),
-
-
-          // ── Nomor VA ────────────────────────────────────────
-          _SectionLabel(label: 'Nomor Virtual Account'),
-          const SizedBox(height: 8),
+          const SizedBox(height: 32),
           Container(
             decoration: BoxDecoration(
               color: surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: primary.withValues(alpha: 0.3)),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 6,
+                  blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ],
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    vaNumber,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      color: onSurface,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: vaNumber));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Nomor VA disalin'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.copy_rounded),
-                  tooltip: 'Salin nomor VA',
-                  color: primary,
-                ),
-              ],
-            ),
-          ),
-
-
-          const SizedBox(height: 20),
-
-
-          // ── Total Pembayaran ─────────────────────────────────
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Total Pembayaran',
-                  style: TextStyle(fontSize: 14, color: onSurface),
-                ),
-                Text(
-                  formatPrice(order.totalAmount),
+                  'Nomor Virtual Account',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: primary,
+                    fontSize: 12,
+                    color: onSurface.withValues(alpha: 0.5),
                   ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        vaNumber,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                          color: onSurface,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: vaNumber));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Nomor VA disalin'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.copy_rounded),
+                      color: primary,
+                    ),
+                  ],
+                ),
+                const Divider(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total Pembayaran',
+                      style: TextStyle(fontSize: 14, color: onSurface.withValues(alpha: 0.7)),
+                    ),
+                    Text(
+                      formatPrice(order.totalAmount),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: primary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-
-
           const SizedBox(height: 24),
-
-
-          // ── Cara Bayar ─────────────────────────────────────
           _SectionLabel(label: 'Cara Pembayaran'),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Container(
             decoration: BoxDecoration(
               color: surface,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 6,
+                  blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -380,22 +333,12 @@ class _VirtualAccountBody extends StatelessWidget {
               ],
             ),
           ),
-
-
           const SizedBox(height: 28),
-
-
-          // ── Cek Status ─────────────────────────────────────
           _CheckStatusButton(
             payStatus: payStatus,
             onPressed: onCheckStatus,
           ),
-
-
           const SizedBox(height: 16),
-
-
-          // Status belum bayar
           if (payStatus == PaymentCheckStatus.idle) ...[
             Center(
               child: Text(
@@ -407,8 +350,6 @@ class _VirtualAccountBody extends StatelessWidget {
               ),
             ),
           ],
-
-
           const SizedBox(height: 32),
         ],
       ),
@@ -416,41 +357,37 @@ class _VirtualAccountBody extends StatelessWidget {
   }
 }
 
-
 class _BankInfo {
   final String name;
   final String prefix;
   final Color color;
 
-
   const _BankInfo(this.name, this.prefix, this.color);
 }
-
 
 class _BankStepTile extends StatelessWidget {
   final _BankInfo bank;
   final String vaNumber;
 
-
   const _BankStepTile({required this.bank, required this.vaNumber});
-
 
   @override
   Widget build(BuildContext context) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       leading: Container(
         width: 44,
         height: 44,
         decoration: BoxDecoration(
           color: bank.color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
           child: Text(
             bank.name,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.bold,
               color: bank.color,
             ),
@@ -465,19 +402,16 @@ class _BankStepTile extends StatelessWidget {
           color: onSurface,
         ),
       ),
-      subtitle: Text(
-        'Pilih Transfer → Virtual Account → masukkan nomor VA',
-        style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.5)),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Text(
+          'Pilih Transfer → Virtual Account → masukkan nomor VA',
+          style: TextStyle(fontSize: 12, color: onSurface.withValues(alpha: 0.5)),
+        ),
       ),
     );
   }
 }
-
-
-// ──────────────────────────────────────────────────────────────
-// GoPay Body
-// ──────────────────────────────────────────────────────────────
-
 
 class _GopayBody extends StatelessWidget {
   final OrderModel order;
@@ -486,7 +420,6 @@ class _GopayBody extends StatelessWidget {
   final bool gopayLaunched;
   final VoidCallback onOpenGopay;
   final VoidCallback onCheckStatus;
-
 
   const _GopayBody({
     required this.order,
@@ -497,22 +430,17 @@ class _GopayBody extends StatelessWidget {
     required this.onCheckStatus,
   });
 
-
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
     final surface = Theme.of(context).colorScheme.surface;
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           const SizedBox(height: 12),
-
-
-          // ── Header icon ─────────────────────────────────────
           Container(
             width: 90,
             height: 90,
@@ -543,12 +471,7 @@ class _GopayBody extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-
-
-          const SizedBox(height: 28),
-
-
-          // ── Info card ────────────────────────────────────────
+          const SizedBox(height: 32),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -556,7 +479,7 @@ class _GopayBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -573,13 +496,13 @@ class _GopayBody extends StatelessWidget {
                       : 'Kamu akan diarahkan ke aplikasi GoPay',
                   done: gopayLaunched,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
                 _StepItem(
                   number: '2',
                   text: 'Konfirmasi pembayaran ${formatPrice(order.totalAmount)} di GoPay',
                   done: false,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
                 _StepItem(
                   number: '3',
                   text: 'Kembali ke aplikasi — status otomatis diperbarui',
@@ -588,12 +511,7 @@ class _GopayBody extends StatelessWidget {
               ],
             ),
           ),
-
-
-          const SizedBox(height: 28),
-
-
-          // ── Tombol buka GoPay ───────────────────────────────
+          const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
@@ -616,21 +534,12 @@ class _GopayBody extends StatelessWidget {
               onPressed: onOpenGopay,
             ),
           ),
-
-
-          const SizedBox(height: 12),
-
-
-          // ── Cek Status Manual ───────────────────────────────
+          const SizedBox(height: 16),
           _CheckStatusButton(
             payStatus: payStatus,
             onPressed: onCheckStatus,
           ),
-
-
           const SizedBox(height: 16),
-
-
           if (payStatus == PaymentCheckStatus.idle && gopayLaunched)
             Text(
               'Sedang menunggu konfirmasi pembayaran dari GoPay...',
@@ -640,8 +549,6 @@ class _GopayBody extends StatelessWidget {
                 color: onSurface.withValues(alpha: 0.5),
               ),
             ),
-
-
           const SizedBox(height: 32),
         ],
       ),
@@ -649,19 +556,16 @@ class _GopayBody extends StatelessWidget {
   }
 }
 
-
 class _StepItem extends StatelessWidget {
   final String number;
   final String text;
   final bool done;
-
 
   const _StepItem({
     required this.number,
     required this.text,
     required this.done,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -697,7 +601,7 @@ class _StepItem extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4),
             child: Text(
               text,
-              style: TextStyle(fontSize: 14, color: onSurface),
+              style: TextStyle(fontSize: 14, color: onSurface, height: 1.4),
             ),
           ),
         ),
@@ -706,18 +610,10 @@ class _StepItem extends StatelessWidget {
   }
 }
 
-
-// ──────────────────────────────────────────────────────────────
-// Shared Widgets
-// ──────────────────────────────────────────────────────────────
-
-
 class _SectionLabel extends StatelessWidget {
   final String label;
 
-
   const _SectionLabel({required this.label});
-
 
   @override
   Widget build(BuildContext context) {
@@ -730,17 +626,14 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-
 class _CheckStatusButton extends StatelessWidget {
   final PaymentCheckStatus payStatus;
   final VoidCallback onPressed;
-
 
   const _CheckStatusButton({
     required this.payStatus,
     required this.onPressed,
   });
-
 
   @override
   Widget build(BuildContext context) {

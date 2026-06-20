@@ -5,9 +5,7 @@ import 'package:book_store/core/routes/app_router.dart';
 class OrderSuccessPage extends StatelessWidget {
   final OrderModel order;
 
-
   const OrderSuccessPage({super.key, required this.order});
-
 
   String _formatPrice(double price) {
     final str = price.toInt().toString();
@@ -21,7 +19,6 @@ class OrderSuccessPage extends StatelessWidget {
     return 'Rp. ${buffer.toString().split('').reversed.join()}';
   }
 
-
   String _paymentMethodLabel(String method) {
     switch (method) {
       case 'gopay':
@@ -34,7 +31,6 @@ class OrderSuccessPage extends StatelessWidget {
         return method;
     }
   }
-
 
   String _statusLabel(String status) {
     switch (status) {
@@ -53,13 +49,11 @@ class OrderSuccessPage extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
     final surface = Theme.of(context).colorScheme.surface;
     final onSurface = Theme.of(context).colorScheme.onSurface;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +66,6 @@ class OrderSuccessPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Success icon
               Container(
                 width: 100,
                 height: 100,
@@ -103,9 +96,6 @@ class OrderSuccessPage extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 28),
-
-
-              // Info box
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -113,7 +103,7 @@ class OrderSuccessPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -148,12 +138,7 @@ class OrderSuccessPage extends StatelessWidget {
                   ),
                 ),
               ),
-
-
               const SizedBox(height: 32),
-
-
-              // Tombol Lihat Detail
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -175,12 +160,7 @@ class OrderSuccessPage extends StatelessWidget {
                   },
                 ),
               ),
-
-
               const SizedBox(height: 12),
-
-
-              // Tombol Kembali ke Beranda
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -211,14 +191,12 @@ class OrderSuccessPage extends StatelessWidget {
   }
 }
 
-
 class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
   final IconData icon;
   final Color iconColor;
   final bool valueBold;
-
 
   const _InfoRow({
     required this.label,
@@ -228,11 +206,9 @@ class _InfoRow extends StatelessWidget {
     this.valueBold = false,
   });
 
-
   @override
   Widget build(BuildContext context) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
-
 
     return Row(
       children: [
