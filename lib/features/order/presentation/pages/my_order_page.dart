@@ -1,4 +1,5 @@
 import 'package:book_store/features/order/data/model/order_model.dart';
+import 'package:book_store/features/order/presentation/pages/order_detail_page.dart';
 import 'package:book_store/features/order/presentation/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -115,11 +116,25 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
               padding: const EdgeInsets.all(16),
               itemCount: orderProv.orders.length,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (ctx, i) => _OrderCard(
-                order: orderProv.orders[i],
-                formatPrice: _formatPrice,
-                formatDate: _formatDate,
-              ),
+              itemBuilder: (ctx, i) {
+                final orderData = orderProv.orders[i];
+                return InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderDetailPage(order: orderData),
+                      ),
+                    );
+                  },
+                  child: _OrderCard(
+                    order: orderData,
+                    formatPrice: _formatPrice,
+                    formatDate: _formatDate,
+                  ),
+                );
+              }
             ),
           );
         },
