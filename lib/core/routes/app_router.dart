@@ -4,8 +4,10 @@ import 'package:book_store/features/auth/presentation/pages/verify_email_page.da
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
 import 'package:book_store/features/cart/presentation/pages/cart_page.dart';
 import 'package:book_store/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:book_store/features/dashboard/presentation/pages/profile_pages.dart';
 import 'package:book_store/features/order/data/model/order_model.dart';
 import 'package:book_store/features/order/presentation/pages/checkout_page.dart';
+import 'package:book_store/features/order/presentation/pages/my_order_page.dart';
 import 'package:book_store/features/order/presentation/pages/order_success_page.dart';
 
 import 'package:book_store/features/order/presentation/pages/payment_pending_page.dart'; 
@@ -20,6 +22,7 @@ class AppRouter {
   static const String register    = '/register'; 
   static const String verifyEmail = '/verify-email'; 
   static const String dashboard   = '/dashboard';
+  static const String profile = '/profile';
   static const String cart        = '/cart'; 
   static const String myOrders    = '/my-orders'; 
   static const String checkout     = '/checkout';
@@ -33,6 +36,8 @@ class AppRouter {
     register:    (_) => const RegisterPage(), 
     verifyEmail: (_) => const VerifyEmailPage(), 
     dashboard:   (_) => const AuthGuard(child: DashboardPage()),
+    profile:   (_) => const AuthGuard(child: ProfilePage()),
+    myOrders:  (_) => const AuthGuard(child: MyOrdersPage()),
     cart:         (_) => const AuthGuard(child: CartPage()),
     checkout:     (_) => const AuthGuard(child: CheckoutPage()),
     
