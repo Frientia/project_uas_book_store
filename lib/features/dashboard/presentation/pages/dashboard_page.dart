@@ -2,6 +2,7 @@ import 'package:book_store/core/routes/app_router.dart';
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
 import 'package:book_store/features/cart/presentation/pages/cart_page.dart';
 import 'package:book_store/features/cart/presentation/providers/cart_provider.dart';
+import 'package:book_store/features/dashboard/presentation/pages/profile_pages.dart';
 import 'package:book_store/features/dashboard/presentation/providers/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final List<Widget> pages = [
       _buildHomeTab(context),
       const AuthGuard(child: CartPage()),
-      const Center(child: Text("Halaman Profil (Coming Soon)")), 
+      const AuthGuard(child: ProfilePage())
     ];
 
     return Scaffold(
@@ -200,8 +201,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
-
-  // --- LOGIKA FILTER PRODUK ---
+  
   List<dynamic> _getFilteredProducts(List<dynamic> allProducts) {
     return allProducts.where((product) {
       // 1. Filter Kategori
