@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:book_store/core/services/dio_client.dart'; // <-- 1. Tambahkan import ini
 import 'package:book_store/features/order/data/model/order_model.dart';
 import 'package:book_store/features/order/domain/repositories/order_repository.dart';
 import 'package:book_store/features/order/domain/repositories/order_repository_impl.dart';
@@ -92,5 +93,23 @@ class OrderProvider extends ChangeNotifier {
   void stopPaymentPolling() {
     _pollingTimer?.cancel();
     _paymentCheckStatus = PaymentCheckStatus.idle;
+  }
+
+  Future<bool> updateOrderStatusToPaid(int orderId) async {
+    try {
+      final response = await DioClient.instance.put('/v1/orders/$orderId/pay');
+      
+      if (response.statusCode == 200) {
+        // <-- 2. Ubah lastOrder menjadi _lastOrder di sini
+        if (_lastOrder != null && _lastOrder!.id == orderId) {
+          _lastOrder = _lastOrder!.copyWith(status: 'paid');
+          notifyListeners();
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
   }
 }
