@@ -1,4 +1,6 @@
 import 'package:book_store/core/routes/app_router.dart';
+import 'package:book_store/core/services/biometric_lock_provider.dart';
+import 'package:book_store/core/services/book_store_pay_service.dart';
 import 'package:book_store/core/services/secure_storage.dart';
 import 'package:book_store/core/theme/app_theme.dart';
 import 'package:book_store/features/auth/presentation/providers/auth_provider.dart';
@@ -20,6 +22,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await GlobalInstitutePayService().init();
+
   runApp(
     MultiProvider(
       providers: [
@@ -32,6 +36,8 @@ void main() async {
           create: (_) => ProfileProvider(
             repository: ProfileRepository(),
           ),
+        ), ChangeNotifierProvider(
+          create: (_) => BiometricLockProvider()..initialize(),
         ),
       ],
       child: const MyApp(),
