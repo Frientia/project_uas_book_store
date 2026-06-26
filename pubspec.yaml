@@ -45,6 +45,10 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.3.1
   shared_preferences: ^2.2.0
+  app_links: ^6.3.2  
+  firebase_messaging: ^16.4.0
+  flutter_local_notifications: ^20.1.0
+  local_auth: ^3.0.1
 
 dev_dependencies:
   flutter_test:
