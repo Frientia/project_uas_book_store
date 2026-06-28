@@ -21,7 +21,7 @@ https://global.ac.id/
 
 Lihat video demo aplikasi untuk melihat semua fitur dalam aksi!
 
-**[Watch Full Demo on YouTube](https://youtu.be/wDitUemQItw)**
+**[Watch Full Demo on YouTube]()**
 
 Alternative link: **[Google Drive Demo]()**
 
@@ -51,8 +51,8 @@ Pastikan Anda sudah menginstall:
 
 1. Clone repository
 ```bash
-git clone https://github.com/Frientia/project_mobile_UTS.git
-cd project_mobile_UTS
+git clone https://github.com/Frientia/project_uas_book_store.git
+cd project_uas_book_store
 ```
 
 2. Install dependencies
@@ -80,8 +80,8 @@ https://github.com/Frientia/my-firebase-backend.git
 ```
 1. Clone repository
 ```bash
-git clone https://github.com/Frientia/my-firebase-backend.git
-cd my-firebase-backend
+git clone https://github.com/Frientia/project_uas_my-catalog-be.git
+cd project_uas_my-catalog-be
 ```
 
 2. Install dependencies
