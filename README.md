@@ -294,7 +294,49 @@ Alur ketika pengguna ingin mengakhiri sesinya dengan aman.
 - `POST /api/orders/checkout` - Melakukan proses checkout
 
 ```
+## Preview Tampilan Aplikasi
 
+### Alur Autentikasi
+| Tampilan 1 | Tampilan 2 | Tampilan 3 |
+| --- | --- | --- |
+| ![Login](https://github.com/user-attachments/assets/a008d82f-f217-40db-8933-f895f56a155f) | ![Register](https://github.com/user-attachments/assets/db175f36-2092-4537-bd2e-30af8d664e89) | ![Lupa Password](https://github.com/user-attachments/assets/9c95bd21-e306-4d9a-a6f7-b3637a2c110c) |
+| Halaman Login | Halaman Register | Lupa Password |
+
+---
+
+### Beranda & Belanja
+| Tampilan 1 | Tampilan 2 | Tampilan 3 |
+| --- | --- | --- |
+| ![Dashboard](https://github.com/user-attachments/assets/51a4409c-6351-4bcf-9286-c183c3d2034e) | ![Keranjang](https://github.com/user-attachments/assets/5b4a755e-1e48-4ea4-9c2c-3114b744d45d) | ![Checkout](https://github.com/user-attachments/assets/a638a4c3-a9d2-4bf0-a3ed-cf8b34110c55) |
+| Dashboard / Utama | Keranjang Belanja | Checkout Pesanan |
+
+---
+
+### Transaksi & Pembayaran
+| Tampilan 1 | Tampilan 2 | Tampilan 3 |
+| --- | --- | --- |
+| ![Selesaikan Pembayaran](https://github.com/user-attachments/assets/25daa7b9-301d-4b06-afd5-3ad2fbf4aac0) | ![PIN](https://github.com/user-attachments/assets/b07863f5-1228-4b65-9e16-4d7c26ba2558) | ![Pembayaran Sukses](https://github.com/user-attachments/assets/11b52eeb-9a67-4446-a22f-2153d48a6912) |
+| Selesaikan Pembayaran | Input PIN Keamanan | Pembayaran Sukses |
+
+---
+
+### Status & Riwayat
+| Tampilan 1 | Tampilan 2 | Tampilan 3 |
+| --- | --- | --- |
+| ![Pesanan Berhasil](https://github.com/user-attachments/assets/071ba1dd-8549-4b7c-95ec-bd4b4edacd7b) | ![Riwayat](https://github.com/user-attachments/assets/b963a846-7a3d-4469-a3e6-41334e88d68a) | ![Deeplink](https://github.com/user-attachments/assets/4063cb31-40a0-4c5b-a56c-afd299528d54) |
+| Pesanan Berhasil | Riwayat Transaksi | Uji Coba Deeplink |
+
+---
+
+### Keamanan & Fitur Lainnya 
+| Tampilan 1 | Tampilan 2 | Tampilan 3 |
+| --- | --- | --- |
+| ![Authentikator](https://github.com/user-attachments/assets/772fa7f0-dd5a-4ef4-89a4-b4ab6c048f97) | ![Akses Terbatas](https://github.com/user-attachments/assets/191da828-8e5b-434e-96e9-72bd44a4b4a0) | ![About](https://github.com/user-attachments/assets/b77522d9-18bf-403c-8f62-08515fe5dd81) |
+| Setup Authenticator (2FA) | Akses Terbatas | Tentang Aplikasi |
+
+---
+```
+```
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
