@@ -144,14 +144,127 @@ lib/
 
 ```
 
-## Authentication Flow
+### 1. Authentication Flow (Akses Masuk & Keamanan)
+
+Alur ini memastikan hanya pengguna yang memiliki token (JWT/Firebase) yang sah yang bisa masuk ke dalam aplikasi.
 
 ```
-1. Splash Loading (Auto-login check)
+1. Splash Screen
+   (Sistem membaca memori HP untuk mencari Token sesi sebelumnya)
    ↓
-2. Login Screen / Register Screen
+2. Auth Guard / BLoC Checker
+   (Memvalidasi apakah token ada dan email sudah terverifikasi)
    ↓
-3. Home Screen (Dashboard)
+   ├─ Jika Kosong/Tidak Valid ➔ 3a. Login / Register Screen
+   ├─ Jika Belum Verifikasi   ➔ 3b. Verify Email Screen
+   └─ Jika Valid & Sukses     ➔ 3c. Home Screen (Dashboard)
+
+```
+
+### 2. Shopping & Order Creation Flow (Pembuatan Pesanan)
+
+Ini adalah alur saat pengguna berbelanja di dalam aplikasi Toko Buku hingga tagihannya terbentuk di *database*.
+
+```
+1. Home Screen (Dashboard)
+   (Mencari dan memilih buku, misal: Atomic Habits)
+   ↓
+2. Cart Page
+   (Mengecek daftar belanjaan dan total harga)
+   ↓
+3. Checkout Page
+   (Mengisi alamat pengiriman dan memilih metode pembayaran 'BookPay')
+   ↓
+4. Order Provider (Backend API Call)
+   (Aplikasi menembak API untuk membuat pesanan dengan status 'pending')
+   ↓
+5. Payment Pending Page
+   (Menampilkan UI Menunggu, dan memulai Polling 5 detik sekali ke Server)
+
+```
+
+### 3. App-to-App Bridge Flow (Lompatan Deeplink Keluar)
+
+Bagian paling krusial di mana Toko Buku memanggil E-Money untuk meminta pembayaran.
+
+```
+1. Payment Pending Page (Toko Buku)
+   (Membentuk URL skema khusus: bookpay://pay?merchant_id=...&amount=...&callback=...)
+   ↓
+2. URL Launcher / OS Android
+   (Mengeksekusi intent, OS Android membuka aplikasi Dompet Kampus)
+   ↓
+3. Splash Screen (BookPay)
+   (Sistem DeeplinkService menangkap URL tagihan dan menyimpannya di memori, sambil mengecek status Login user E-Money)
+   ↓
+4. Payment Confirmation Page (BookPay)
+   (Aplikasi membaca memori tagihan dan menampilkan UI konfirmasi nominal ke pengguna)
+
+```
+
+### 4. Transaction Execution Flow (Proses Bayar E-Money)
+
+Alur di dalam aplikasi E-Money saat memvalidasi otorisasi dan memotong saldo.
+
+```
+1. Payment Confirmation Page (BookPay)
+   (Pengguna menekan tombol "Bayar")
+   ↓
+2. OTP / 2FA Verification
+   (Pengguna memasukkan kode keamanan dari Firebase/Email/TOTP)
+   ↓
+3. Payment Bloc (Backend API Call)
+   (Menembak API E-Money untuk memotong saldo. Jika gagal ➔ Notifikasi Error)
+   ↓
+4. Payment Success Listener
+   (Menerima respons 200 OK dari Server)
+   ↓
+5. Callback Execution
+   (Mengeksekusi URL titipan: bookstore://payment-callback?status=success&reference=INV-...)
+
+```
+
+### 5. Callback & Finalization Flow (Kembali ke Toko Buku)
+
+Alur saat E-Money menendang pengguna kembali ke Toko Buku untuk menyelesaikan transaksi.
+
+```
+1. OS Android
+   (Mengeksekusi intent callback, membuka paksa kembali jendela Toko Buku)
+   ↓
+2. GlobalInstitutePayService (Toko Buku)
+   (Menangkap parameter status=success dari URL yang masuk)
+   ↓
+3. Payment Pending Page
+   (Mencocokkan nomor Invoice. Jika cocok ➔ Hentikan Polling 5 detik)
+   ↓
+4. Order Provider (Update Status)
+   (Menembak API untuk mengubah status pesanan dari 'pending' menjadi 'paid')
+   ↓
+5. Order Success Page
+   (Menampilkan struk bukti pembelian berhasil)
+
+```
+
+### 6. Logout Flow (Penutupan Sesi)
+
+Alur ketika pengguna ingin mengakhiri sesinya dengan aman.
+
+```
+1. Home Screen (Dashboard)
+   ↓
+2. Profile Page
+   (Pengguna menekan tombol "Keluar / Logout")
+   ↓
+3. Auth Provider / Bloc
+   (Menghapus seluruh Token Firebase/JWT dari penyimpanan lokal HP)
+   ↓
+4. Auth Guard Listener
+   (Otomatis mendeteksi state berubah menjadi Unauthenticated)
+   ↓
+5. Login Screen
+   (Mengembalikan pengguna ke titik awal dan menutup akses menu utama)
+
 ```
 
 
