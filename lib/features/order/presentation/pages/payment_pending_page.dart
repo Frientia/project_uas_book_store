@@ -76,13 +76,14 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
   Future<void> _launchBookPay() async {
     final notes = widget.order.notes.isNotEmpty ? widget.order.notes : null;
 
-    final deeplinkUrl = GlobalInstitutePayService.buildDeeplinkUrl(
+    final basedeeplinkUrl = GlobalInstitutePayService.buildDeeplinkUrl(
       orderId: widget.order.id,
       amount: widget.order.totalAmount,
       description: notes,
     );
 
-    final uri = Uri.parse(deeplinkUrl);
+    final String finaldeeplinkUrl = '$basedeeplinkUrl&return_url:book_store://payment-callback';
+    final uri = Uri.parse(finaldeeplinkUrl);
 
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
