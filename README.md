@@ -120,35 +120,43 @@ flutter build apk --split-per-abi
 ```
 lib/
 ├── core/
-│   ├── constants/          # (Baru) Tempat simpan String, warna, atau ukuran statis
-│   ├── routes/             # (Pindahkan logika navigasi dari main.dart ke sini)
-│   ├── services/           # (Baru) Logic Firebase Auth
-│   └── theme/              # (Baru) Tema warna aplikasi
-│
+│   ├── constants/        # Konstanta API dan pengaturan umum
+│   ├── providers/        # Provider global seperti ThemeProvider
+│   ├── routes/           # AppRouter dan AuthGuard
+│   ├── services/         # Dio client, secure storage, pay service, biometric
+│   ├── theme/            # Tema terang/gelap
+│   └── widget/           # Widget umum dan lock screen
 ├── features/
-│   ├── auth/               # Modul Login & Register
+│   ├── auth/             # Login, register, verify email
 │   │   ├── data/
 │   │   ├── domain/
 │   │   └── presentation/
-│   │       ├── pages/      # login_page.dart, register_page.dart
-│   │       └── widgets/    # auth_header.dart, custom_button.dart dll
-│   │
-│   ├── dashboard/          # Modul Utama (Dashboard)
-│       ├── data/
-│       ├── domain/
-│       └── presentation/
-│           ├── pages/      # dashboard.dart
-│   
+│   │       ├── pages/
+│   │       └── widgets/
+│   ├── cart/             # Keranjang belanja
+│   │   ├── data/
+│   │   ├── domain/
+│   │   ├── presentation/
+│   │   └── repositories/
+│   ├── dashboard/        # Dashboard dan profil pengguna
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   ├── order/            # Checkout, pesanan, payment flow
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
 ├── firebase_options.dart
-└── main.dart
-
+├── flutter_biometric_kit.dart
+├── main.dart
+└── src/                 # Biometric service and exceptions
 ```
 
-### 1. Authentication Flow (Akses Masuk & Keamanan)
+## 1. Authentication Flow (Akses Masuk & Keamanan)
 
 Alur ini memastikan hanya pengguna yang memiliki token (JWT/Firebase) yang sah yang bisa masuk ke dalam aplikasi.
 
-```
+```text
 1. Splash Screen
    (Sistem membaca memori HP untuk mencari Token sesi sebelumnya)
    ↓
@@ -161,11 +169,11 @@ Alur ini memastikan hanya pengguna yang memiliki token (JWT/Firebase) yang sah y
 
 ```
 
-### 2. Shopping & Order Creation Flow (Pembuatan Pesanan)
+## 2. Shopping & Order Creation Flow (Pembuatan Pesanan)
 
 Ini adalah alur saat pengguna berbelanja di dalam aplikasi Toko Buku hingga tagihannya terbentuk di *database*.
 
-```
+```text
 1. Home Screen (Dashboard)
    (Mencari dan memilih buku, misal: Atomic Habits)
    ↓
@@ -183,11 +191,11 @@ Ini adalah alur saat pengguna berbelanja di dalam aplikasi Toko Buku hingga tagi
 
 ```
 
-### 3. App-to-App Bridge Flow (Lompatan Deeplink Keluar)
+## 3. App-to-App Bridge Flow (Lompatan Deeplink Keluar)
 
 Bagian paling krusial di mana Toko Buku memanggil E-Money untuk meminta pembayaran.
 
-```
+```text
 1. Payment Pending Page (Toko Buku)
    (Membentuk URL skema khusus: bookpay://pay?merchant_id=...&amount=...&callback=...)
    ↓
@@ -202,11 +210,11 @@ Bagian paling krusial di mana Toko Buku memanggil E-Money untuk meminta pembayar
 
 ```
 
-### 4. Transaction Execution Flow (Proses Bayar E-Money)
+## 4. Transaction Execution Flow (Proses Bayar E-Money)
 
 Alur di dalam aplikasi E-Money saat memvalidasi otorisasi dan memotong saldo.
 
-```
+```text
 1. Payment Confirmation Page (BookPay)
    (Pengguna menekan tombol "Bayar")
    ↓
@@ -224,11 +232,11 @@ Alur di dalam aplikasi E-Money saat memvalidasi otorisasi dan memotong saldo.
 
 ```
 
-### 5. Callback & Finalization Flow (Kembali ke Toko Buku)
+## 5. Callback & Finalization Flow (Kembali ke Toko Buku)
 
 Alur saat E-Money menendang pengguna kembali ke Toko Buku untuk menyelesaikan transaksi.
 
-```
+```text
 1. OS Android
    (Mengeksekusi intent callback, membuka paksa kembali jendela Toko Buku)
    ↓
@@ -246,11 +254,11 @@ Alur saat E-Money menendang pengguna kembali ke Toko Buku untuk menyelesaikan tr
 
 ```
 
-### 6. Logout Flow (Penutupan Sesi)
+## 6. Logout Flow (Penutupan Sesi)
 
 Alur ketika pengguna ingin mengakhiri sesinya dengan aman.
 
-```
+```text
 1. Home Screen (Dashboard)
    ↓
 2. Profile Page
@@ -271,9 +279,19 @@ Alur ketika pengguna ingin mengakhiri sesinya dengan aman.
 ## 📝 API Documentation
 
 ## Authentication Endpoints
+```dart
 - `POST /api/auth/register` - Register user baru
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
+
+## Products Endpoints
+```dart
+- `POST /api/products` - Menambahkan produk baru
+- `GET /api/products` - Mendapatkan daftar produk
+- `GET /api/profile` - Mendapatkan data profil user
+- `GET /api/cart` - Mendapatkan data keranjang belanja
+- `GET /api/orders` - Mendapatkan daftar pesanan
+- `POST /api/orders/checkout` - Melakukan proses checkout
 
 ## 📄 License
 
