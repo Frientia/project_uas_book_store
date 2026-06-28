@@ -293,11 +293,11 @@ Alur ketika pengguna ingin mengakhiri sesinya dengan aman.
 - `GET /api/orders` - Mendapatkan daftar pesanan
 - `POST /api/orders/checkout` - Melakukan proses checkout
 
+```
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
 
 ## Acknowledgments
 
@@ -305,7 +305,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Firebase](https://firebase.google.com/) - For backend services
 - [Flaticon](https://www.flaticon.com/) - For app icons
 - [Unsplash](https://unsplash.com/) - For placeholder images
-
 
 
 ---
