@@ -11,7 +11,7 @@ FAKULTAS TEKNOLOGI INFORMASI & KOMUNIKASI
 https://global.ac.id/
   </div>
 
-  ##  Project UTS
+  ##  Project UAS
   - Nim : 1123150114
   - Nama : Muhamad Yajid Rizky
   - Mata Kuliah : Aplikasi Mobile
