@@ -200,7 +200,7 @@ Bagian paling krusial di mana Toko Buku memanggil E-Money untuk meminta pembayar
    (Membentuk URL skema khusus: bookpay://pay?merchant_id=...&amount=...&callback=...)
    ↓
 2. URL Launcher / OS Android
-   (Mengeksekusi intent, OS Android membuka aplikasi Dompet Kampus)
+   (Mengeksekusi intent, OS Android membuka aplikasi E-Money BookStore)
    ↓
 3. Splash Screen (BookPay)
    (Sistem DeeplinkService menangkap URL tagihan dan menyimpannya di memori, sambil mengecek status Login user E-Money)
@@ -240,7 +240,7 @@ Alur saat E-Money menendang pengguna kembali ke Toko Buku untuk menyelesaikan tr
 1. OS Android
    (Mengeksekusi intent callback, membuka paksa kembali jendela Toko Buku)
    ↓
-2. GlobalInstitutePayService (Toko Buku)
+2. BookStorePayService (Toko Buku)
    (Menangkap parameter status=success dari URL yang masuk)
    ↓
 3. Payment Pending Page
@@ -283,7 +283,7 @@ Alur ketika pengguna ingin mengakhiri sesinya dengan aman.
 - `POST /api/auth/register` - Register user baru
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
-
+```
 ## Products Endpoints
 ```dart
 - `POST /api/products` - Menambahkan produk baru
