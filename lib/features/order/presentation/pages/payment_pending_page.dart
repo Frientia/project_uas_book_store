@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:book_store/core/services/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class PaymentPendingPage extends StatefulWidget {
 
 class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBindingObserver {
   bool _payLaunched = false;
+  bool _isNavigatingToSuccess = false;
   StreamSubscription<PaymentCallbackData>? _callbackSub;
 
   @override
@@ -29,20 +31,23 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
 
     final expectedReference = 'INV-${widget.order.id}';
 
+    // Auto-launch untuk BookPay
     if (widget.order.paymentMethod == 'bookpay') {
       WidgetsBinding.instance.addPostFrameCallback((_) => _launchBookPay());
     }
 
+    // Mulai polling status pembayaran
     context.read<OrderProvider>().startPaymentPolling(widget.order.id);
 
+    // Cek apakah ada callback yang tertunda
     final pending = BookStorePayService().consumePendingCallback();
     if (pending != null && pending.isSuccess && pending.reference == expectedReference) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _onPaymentSuccess());
     }
 
+    // Dengarkan stream callback dari deeplink
     _callbackSub = BookStorePayService().onCallback.listen((data) {
       if (!mounted) return;
-      
       if (data.reference != expectedReference) return;
 
       if (data.isSuccess) {
@@ -70,6 +75,12 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _payLaunched) {
       context.read<OrderProvider>().checkPaymentStatus(widget.order.id);
+      
+      // Hit endpoint untuk update status ke backend
+      final endpoint = '/orders/${widget.order.id}/pay';
+      DioClient.instance.post(endpoint).then((response) {
+        debugPrint('Status sukses di-update ke Backend BookStore! URL=${response.requestOptions.baseUrl}${response.requestOptions.path}');
+      });
     }
   }
 
@@ -112,28 +123,47 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
   }
 
   Future<void> _onPaymentSuccess() async {
+    if (_isNavigatingToSuccess) return;
+    _isNavigatingToSuccess = true;
+    debugPrint('_onPaymentSuccess dipanggil — verifikasi backend & navigasi jika sudah paid');
+
+    await context.read<OrderProvider>().checkPaymentStatus(widget.order.id);
+    
+    if (!mounted) {
+      _isNavigatingToSuccess = false;
+      return;
+    }
+
     context.read<OrderProvider>().stopPaymentPolling();
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
+    if (!mounted) {
+      _isNavigatingToSuccess = false;
+      return;
+    }
 
-    await context.read<OrderProvider>().updateOrderStatusToPaid(widget.order.id);
+    final orderProv = context.read<OrderProvider>();
+    final isOrderPaid = orderProv.paymentCheckStatus == PaymentCheckStatus.paid;
 
-    if (!mounted) return;
-    Navigator.pop(context);
+    if (!isOrderPaid) {
+      debugPrint('Pembayaran sukses di wallet, tetapi status order backend masih pending. Menunggu polling.');
+      _isNavigatingToSuccess = false;
+      return;
+    }
 
+    final currentOrder = orderProv.lastOrder ?? widget.order;
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRouter.orderSuccess,
       (route) => route.settings.name == AppRouter.dashboard,
-      arguments: context.read<OrderProvider>().lastOrder ?? widget.order,
+      arguments: currentOrder,
     );
   }
 
   void _showCancelConfirmation() {
+    // VARIABEL DIPINDAHKAN KE SINI: Ambil data order terbaru untuk dibawa navigasi
+    final orderProv = context.read<OrderProvider>();
+    final updatedOrder = orderProv.lastOrder ?? widget.order;
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -151,8 +181,9 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
               Navigator.pop(ctx);
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                AppRouter.dashboard,
-                (route) => false,
+                AppRouter.myOrders, // Biasanya batal bayar diarahkan ke pesanan saya, bukan orderSuccess
+                (route) => route.settings.name == AppRouter.dashboard,
+                arguments: updatedOrder,
               );
             },
             child: Text(
@@ -207,6 +238,10 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
     );
   }
 }
+
+// ============================================================================
+// WIDGET COMPONENTS
+// ============================================================================
 
 class _VirtualAccountBody extends StatelessWidget {
   final OrderModel order;

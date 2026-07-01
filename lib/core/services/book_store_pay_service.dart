@@ -3,7 +3,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 
 void _log(String tag, String message) {
-  debugPrint('[PasarMalam/$tag] $message');
+  debugPrint('[BookStore/$tag] $message');
 }
 
 class PaymentCallbackData {
@@ -36,54 +36,63 @@ class BookStorePayService {
     final data = _pendingCallback;
     _pendingCallback = null;
     if (data != null) {
-      _log(_tag, ' Mengonsumsi pending cold-start callback: $data');
+      debugPrint('[BookStore/BookPay] Mengonsumsi pending cold-start callback: $data');
     }
     return data;
   }
 
   Future<void> init() async {
-    _log(_tag, ' Inisialisasi GlobalInstitutePayService...');
+    debugPrint('[BookStore/BookPay] Inisialisasi BookStorePayService...');
     final appLinks = AppLinks();
 
     try {
-      _log(_tag, ' Mengambil initial link (cold start)...');
+      debugPrint('[BookStore/BookPay] Mengambil initial link (cold start)...');
       final uri = await appLinks.getInitialLink();
       if (uri != null) {
-        _log(_tag, ' Initial link ditemukan: $uri');
+        debugPrint('[BookStore/BookPay] Initial link ditemukan: $uri');
         _handleUri(uri, isColdStart: true);
       } else {
-        _log(_tag, ' Tidak ada initial link (app dibuka normal)');
+        debugPrint('[BookStore/BookPay] Tidak ada initial link (app dibuka normal)');
       }
     } catch (e) {
-      _log(_tag, 'Error saat getInitialLink: $e');
+      debugPrint('[BookStore/BookPay] Error saat getInitialLink: $e');
     }
 
-    _log(_tag, ' Memulai listener uriLinkStream...');
+    debugPrint('[BookStore/BookPay] Memulai listener uriLinkStream...');
     appLinks.uriLinkStream.listen(
       (uri) {
-        _log(_tag, ' URI masuk via stream: $uri');
+        debugPrint('[BookStore/BookPay] URI masuk via stream: $uri');
         _handleUri(uri);
       },
       onError: (Object e) {
-        _log(_tag, 'Error pada uriLinkStream: $e');
+        debugPrint('[BookStore/BookPay] Error pada uriLinkStream: $e');
       },
     );
-    _log(_tag, ' Inisialisasi selesai.');
+    debugPrint('[BookStore/BookPay] Inisialisasi selesai.');
   }
 
   void _handleUri(Uri uri, {bool isColdStart = false}) {
-    _log(
-      _tag,
-      ' Handle URI | scheme=${uri.scheme} host=${uri.host} '
+    debugPrint(
+      '[BookStore/BookPay] Handle URI | scheme=${uri.scheme} host=${uri.host} '
       'path=${uri.path} params=${uri.queryParameters} | coldStart=$isColdStart',
     );
 
     if (uri.scheme != 'bookstore') {
-      _log(_tag, ' Diabaikan — bukan skema bookstore (scheme=${uri.scheme})');
+      debugPrint('[BookStore/BookPay] Diabaikan — bukan skema bookstore (scheme=${uri.scheme})');
       return;
     }
+
+    final isCallbackHost = uri.host == 'payment-callback';
+    final isCallbackPath = uri.path == '/payment-callback';
+    final isReturnUrl = uri.host.isEmpty && uri.path.isEmpty && uri.queryParameters.containsKey('status');
+
+    if (!isCallbackHost && !isCallbackPath && !isReturnUrl) {
+      debugPrint('[BookStore/BookPay] Diabaikan — bukan callback yang dikenali');
+    return;
+    }
+
     if (uri.host != 'payment-callback') {
-      _log(_tag, ' Diabaikan — bukan host payment-callback (host=${uri.host})');
+      debugPrint('[BookStore/BookPay] Diabaikan — bukan host payment-callback (host=${uri.host})');
       return;
     }
 
@@ -93,15 +102,15 @@ class BookStorePayService {
       transactionId: uri.queryParameters['transaction_id'],
     );
 
-    _log(_tag, ' Callback diterima: $data');
+    debugPrint('[BookStore/BookPay] Callback diterima: $data');
 
     if (isColdStart) {
       _pendingCallback = data;
-      _log(_tag, ' Disimpan sebagai pending cold-start callback');
+      debugPrint('[BookStore/BookPay] Disimpan sebagai pending cold-start callback');
     }
 
     _callbackController.add(data);
-    _log(_tag, ' Event dikirim ke stream (subscriber aktif)');
+    debugPrint('[BookStore/BookPay] Event dikirim ke stream (subscriber aktif)');
   }
 
   static String buildDeeplinkUrl({
@@ -115,7 +124,7 @@ class BookStorePayService {
     const callbackUrl = 'bookstore://payment-callback';
 
     _log(_tag, ' Membangun deeplink URL:');
-    _log(_tag, 'merchant_id : MCH_PASAR_MALAM');
+    _log(_tag, 'merchant_id : MCH_BOOK_STORE');
     _log(_tag, 'merchant_name: Book Store');
     _log(_tag, 'amount : ${amount.toInt()}');
     _log(_tag, 'description : $desc');
@@ -126,7 +135,7 @@ class BookStorePayService {
       scheme: scheme,
       host: host,
       queryParameters: {
-        'merchant_id': 'MCH_PASAR_MALAM',
+        'merchant_id': 'MCH_BOOK_STORE',
         'merchant_name': 'Book Store',
         'amount': amount.toInt().toString(),
         'description': desc,

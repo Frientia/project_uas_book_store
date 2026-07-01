@@ -60,6 +60,19 @@ class MyApp extends StatelessWidget {
       themeMode: themeProvider.themeMode,
       initialRoute: AppRouter.splash,
       routes: AppRouter.routes,
+      onGenerateRoute: (settings) {
+        final routeName = settings.name ?? '';
+        final uri = Uri.tryParse(routeName);
+        if (uri != null && uri.queryParameters.containsKey('status')) {
+          return MaterialPageRoute(builder: (_) => const SplashPage());
+        }
+        if (routeName.contains('payment-callback')) {
+          return MaterialPageRoute(builder: (_) => const SplashPage());
+        }
+        return null;
+      },
+      onUnknownRoute: (settings) =>
+          MaterialPageRoute(builder: (_) => const SplashPage()),
     );
   }
 }

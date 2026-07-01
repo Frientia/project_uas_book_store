@@ -62,14 +62,15 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkPaymentStatus(int orderId) async {
+Future<void> checkPaymentStatus(int orderId) async {
     _paymentCheckStatus = PaymentCheckStatus.checking;
     notifyListeners();
+    
     try {
       final updatedOrder = await _repository.getOrderDetail(orderId);
       _lastOrder = updatedOrder;
       
-      if (updatedOrder.status != 'pending') {
+      if (updatedOrder.status.toLowerCase() == 'paid') {
         _paymentCheckStatus = PaymentCheckStatus.paid;
       } else {
         _paymentCheckStatus = PaymentCheckStatus.idle;
@@ -79,11 +80,12 @@ class OrderProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
   void startPaymentPolling(int orderId) {
     _pollingTimer?.cancel();
-    _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      checkPaymentStatus(orderId);
+
+    _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+
+      await checkPaymentStatus(orderId);
       if (_paymentCheckStatus == PaymentCheckStatus.paid) {
         timer.cancel();
       }
