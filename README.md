@@ -15,13 +15,13 @@ https://global.ac.id/
   - Nim : 1123150114
   - Nama : Muhamad Yajid Rizky
   - Mata Kuliah : Aplikasi Mobile
-  - Kelas : TI-SE 23 M 
+  - Kelas : TI-SE 23 SH
 
 ## Demo Video
 
 Lihat video demo aplikasi untuk melihat semua fitur dalam aksi!
 
-**[Watch Full Demo on YouTube]()**
+**[Watch Full Demo on YouTube](https://youtu.be/3T_PeOEtE7w)**
 
 Alternative link: **[Google Drive Demo]()**
 
@@ -76,7 +76,7 @@ flutter run
 
 0. Link Backend Repo
 ```bash
-https://github.com/Frientia/my-firebase-backend.git
+https://github.com/Frientia/project_uas_my-catalog-be.git
 ```
 1. Clone repository
 ```bash
