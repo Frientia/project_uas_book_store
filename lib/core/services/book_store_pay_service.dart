@@ -20,10 +20,10 @@ class PaymentCallbackData {
       'PaymentCallbackData(status=$status, reference=$reference, transactionId=$transactionId)';
 }
 
-class GlobalInstitutePayService {
-  static final GlobalInstitutePayService _instance = GlobalInstitutePayService._();
-  factory GlobalInstitutePayService() => _instance;
-  GlobalInstitutePayService._();
+class BookStorePayService {
+  static final BookStorePayService _instance = BookStorePayService._();
+  factory BookStorePayService() => _instance;
+  BookStorePayService._();
 
   static const _tag = 'BookPay';
 

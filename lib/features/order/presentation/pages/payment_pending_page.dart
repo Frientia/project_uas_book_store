@@ -35,12 +35,12 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
 
     context.read<OrderProvider>().startPaymentPolling(widget.order.id);
 
-    final pending = GlobalInstitutePayService().consumePendingCallback();
+    final pending = BookStorePayService().consumePendingCallback();
     if (pending != null && pending.isSuccess && pending.reference == expectedReference) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _onPaymentSuccess());
     }
 
-    _callbackSub = GlobalInstitutePayService().onCallback.listen((data) {
+    _callbackSub = BookStorePayService().onCallback.listen((data) {
       if (!mounted) return;
       
       if (data.reference != expectedReference) return;
@@ -76,7 +76,7 @@ class _PaymentPendingPageState extends State<PaymentPendingPage> with WidgetsBin
   Future<void> _launchBookPay() async {
     final notes = widget.order.notes.isNotEmpty ? widget.order.notes : null;
 
-    final basedeeplinkUrl = GlobalInstitutePayService.buildDeeplinkUrl(
+    final basedeeplinkUrl = BookStorePayService.buildDeeplinkUrl(
       orderId: widget.order.id,
       amount: widget.order.totalAmount,
       description: notes,

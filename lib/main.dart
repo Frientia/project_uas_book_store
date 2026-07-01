@@ -22,7 +22,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await GlobalInstitutePayService().init();
+  await BookStorePayService().init();
 
   runApp(
     MultiProvider(
